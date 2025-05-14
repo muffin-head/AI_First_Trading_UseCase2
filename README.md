@@ -93,10 +93,4 @@ Enables **store-specific stock allocation**, **localized marketing**, and smarte
 | 📦 **Inventory Optimization**     | Supply Chain               | Reduce carrying costs and avoid out-of-stock |
 | 🧠 **Promotion Effectiveness**    | Marketing & Trade Teams    | Understand ROI of discounts and promotions   |
 
----
-
-## 🗃️ Download Dataset
-
-📁 Final Version (2023Q3 to 2025Q3):
-👉 [Final\_OliveOil\_Pricing\_2023Q3\_to\_2025Q3.csv](sandbox:/mnt/data/Final_OliveOil_Pricing_2023Q3_to_2025Q3.csv)
 
