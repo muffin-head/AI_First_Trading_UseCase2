@@ -1,96 +1,152 @@
+<p align="center">
+  <img src="https://aatrox-demo.vercel.app/assets/images/logo.png" alt="Logo of AatroX Vue.js 3 Admin dashboard" width="114" height="114">
+</p>
 
+<h3 align="center">💚 A Minimal Admin Dashboard Develop with Vue 3, Vite, and TailwindCss. It's Free 💥 </h3>
 
-# 📦 Olive Oil Retail Inventory & Demand Forecasting Dataset
+<p align="center">
+  Aatrox -  VueJS 3 & TailwindCss Free Admin  Dashboard Template<br>
+  <a href="https://aatrox-vue-free.netlify.app"><strong>Explore the Admin dashboard live »</strong></a>
+</p>
 
-### Strategic Dataset for Operational Efficiency (2023Q3–2025Q3)
+<p align="center">
+<a href="https://aatrox-vue-free.netlify.app">
+  <img width="100%" height="auto" style="border-radius: 10px;" src="./src/assets/images/screenshot.png" alt="Aatrox Vue 3 & tailwindCss Admin " >
+  </a>
+</p>
 
-## 🧭 Purpose of This Dataset
+## Tech Stack
 
-This dataset was created to help retail and operations teams **forecast demand**, **optimize inventory levels**, and **improve product-level planning** across multiple regions and supplier networks. Spanning from **Q3 2023 to Q3 2025**, it simulates real-world FMCG behavior for olive oil products sold across UK counties and supplier partners.
+**Client Side :** Vue 3 , TailwindCSS , ViteJs
 
----
+## Aatrox - VueJS 3 & TailwindCss Admin
 
-## 📌 Core Objectives & Use Cases
+### Key Features
 
-### 1️⃣ Forecast Future Demand
+-   ⚡️ [Vue 3](https://github.com/vuejs/vue-next) & [Vite](https://vitejs.dev)
+-   🛣 Beautifully Crafted
+-   📦 [TailwindCss](https://tailwindcss.com/)
+-   📑 [Nuxt-inspired Routing ](./src/routes/index.js)
+-   🔍 Well Organized
+-   🌐 Production Ready
+-   ♿ Accessible frontend routing
+-   🚝 [Ready to Deploy](https://www.netlify.com/)
+-   💫 Clean Code
 
-**What to do:**
-Analyze historical `Units Sold` by **product**, **supplier**, and **quarter**.
+## Aatrox is the most comprehensive admin template available
 
-**Outcome:**
-You’ll understand how many units of each product are likely to sell in upcoming weeks or quarters.
+If you're a developer seeking for a developer-friendly, feature-rich, and highly customizable admin dashboard, Aatrox is the best option. We used industry best practices to create the greatest admin template that is not only quick and easy to use, but also extremely scalable. With maximum convenience and versatility, you'll be able to create any application you desire with no effort.
 
-**Why It Matters:**
-Prevents both **overstocking** (wasted storage) and **stockouts** (missed sales).
+With ease, create high-quality applications. Create eye-catching, high-quality, and high-performing single-page apps with our creative admin template. Your apps will be fully responsive, ensuring that they look great and work perfectly on desktops, tablets, and mobile devices.
 
----
+[View Demo](https://aatrox-vue-free.netlify.app)
 
-### 2️⃣ Optimize Inventory Levels
+## Installation ⚒️
 
-**What to do:**
-Align `Inventory Level` with projected `Units Sold` per product and region.
+> We recommend you use yarn
 
-**Outcome:**
-You’ll know **when to reorder** and **how much stock** to maintain.
+1. Install all packages
 
-**Why It Matters:**
-Minimizes **storage costs**, improves **cash flow**, and keeps **shelves full** without overloading inventory.
+    ```bash
+    yarn
 
----
+    # npm install [for npm]
+    ```
 
-### 3️⃣ Understand What Drives Sales
+2. Run development server
 
-**What to do:**
-Analyze how `Units Sold` changes with `Adjusted Price`, `Discount`, `Holiday/Promotion`, and `Competitor Price in Market`.
+    ```bash
+    yarn dev
 
-**Outcome:**
-You'll learn how **price sensitivity**, **promotions**, or **competitive pricing** impact sales performance.
+    # npm run dev [for npm]
+    ```
 
-**Why It Matters:**
-Allows for more **data-driven promotion planning** and **better pricing strategies** to drive revenue.
+3. Generate build files for deployment
 
----
+    ```bash
+    yarn build
 
-### 4️⃣ Track Product Performance by Store or Region
+    # npm run build [for npm]
+    ```
 
-**What to do:**
-Break down `Units Sold` by `County Retailer` and `Retailer Supplier Name`.
+## Run Locally
 
-**Outcome:**
-Identify **top-performing products per region** and locate **underperforming SKUs**.
+Clone the project
 
-**Why It Matters:**
-Enables **store-specific stock allocation**, **localized marketing**, and smarter **regional forecasting**.
+```bash
+  git clone https://github.com/uilibrary/AatroX-vue
+```
 
----
+Go to the project directory
 
-## 🧾 Key Columns in the Dataset
+```bash
+  cd AatroX-vue
+```
 
-| Column                       | Description                                 |
-| ---------------------------- | ------------------------------------------- |
-| `Product ID`                 | SKU or olive oil blend identifier           |
-| `Quarter`                    | Time period (e.g., `2025Q1`)                |
-| `County Retailer`            | Retailer’s regional location                |
-| `Retailer Supplier Name`     | Specific distributor or retailer            |
-| `Inventory Level`            | Available stock at the start of the quarter |
-| `Units Sold`                 | Number of units sold in the quarter         |
-| `Units Ordered`              | Volume of new stock ordered                 |
-| `Demand Forecast`            | Projected demand value                      |
-| `Adjusted Price`             | Final sale price per unit                   |
-| `Competitor Price in Market` | Reference market price from competitors     |
-| `Discount`                   | Discount (%) applied                        |
-| `Holiday/Promotion`          | Holiday campaign indicator (0 to 1 scale)   |
+Install dependencies
 
----
+```bash
+  yarn
+```
 
-## 📊 Ideal Applications
+Start the server
 
-| Use Case                          | Team                       | Value                                        |
-| --------------------------------- | -------------------------- | -------------------------------------------- |
-| 📈 **Demand Forecasting**         | Data/ML/Inventory Planning | Align inventory with predicted sales         |
-| 🏬 **Store-wise Allocation**      | Operations                 | Ship the right product to the right region   |
-| 💹 **Price Sensitivity Analysis** | Category/Revenue Teams     | Identify ideal pricing strategies            |
-| 📦 **Inventory Optimization**     | Supply Chain               | Reduce carrying costs and avoid out-of-stock |
-| 🧠 **Promotion Effectiveness**    | Marketing & Trade Teams    | Understand ROI of discounts and promotions   |
+```bash
+  yarn dev
+```
 
+## Upgrade to PRO Version
 
+We also have a pro version of this product which bundles even more pages and components if you want to save more time and design efforts.
+
+| Free Version (this one) | [Aatrox Dashboard PRO](https://aatrox-vue.netlify.app/landingpage) |
+| ----------------------- | ------------------------------------------------------------------ |
+| **5** Demo Pages        | **50+** demo pages                                                 |
+| -                       | ✔ Dark & light mode                                                |
+| - 1 Dashboard           | ✔ 5 Dashboard                                                      |
+| -                       | ✔ 11 App Pages                                                     |
+| -                       | ✔ 6 UiKits Pages                                                   |
+| -                       | ✔ Advanced Widgets                                                 |
+| -                       | ✔ 2 Profile Version                                                |
+| -                       | ✔ 10 Authentication Pages                                          |
+| -                       | ✔ 10 Types of Charts Demo Pages                                    |
+
+## Demo
+
+-   [Dashboard Page](https://aatrox-vue-free.netlify.app/dashboards/dashboard-version-one)
+-   [Buttons Page](https://aatrox-vue-free.netlify.app/components/button)
+-   [Profile Page](https://aatrox-vue-free.netlify.app/profile/profileTwo)
+-   [Sign in Page](https://aatrox-vue-free.netlify.app/signIn)
+-   [Sign Up Page](https://aatrox-vue-free.netlify.app/signUp)
+
+## Documentation
+
+[Documentation](https://aatorx-vue-doc.vercel.app/)
+
+## 🚀 About Us
+
+We are <a href="https://ui-lib.com/">Ui-Lib</a> , A Team of awesome Developer and desginer trying to make other developer life easy :)
+
+## 🔗 Visit us
+
+[![portfolio](https://img.shields.io/badge/my_portfolio-000?style=for-the-badge&logo=ko-fi&logoColor=white)](https://ui-lib.com/)
+[![linkedin](https://img.shields.io/badge/linkedin-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/company/ui-lib/)
+[![twitter](https://img.shields.io/badge/twitter-1DA1F2?style=for-the-badge&logo=twitter&logoColor=white)](https://twitter.com/uilibofficial)
+
+## Roadmap
+
+-   RTL support
+
+-   Lang Support
+
+## Authors
+
+-   [@uilibrary](https://github.com/uilibrary)
+
+## License
+
+[MIT](https://choosealicense.com/licenses/mit/)
+
+## Support
+
+For support, email uilib.help@gmail.com or join our <a href="https://discord.gg/pVW9wdBuYW">discord</a> Server.

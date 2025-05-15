@@ -89,16 +89,16 @@ let handleWindowResize = () => {
                             </div>
                         </router-link>
 
-                        <router-link
-                            to="/dataanalytics"
-                            tag="li"
-                            class="nav-item"
-                            >
-                            <div class="nav-item-hold">
-                                <i class="i-Structure text-3xl"></i>
-                                <p>Data Architecture</p>
-                            </div>
-                            </router-link>
+<router-link
+  to="/inventory/smart-restock"
+  tag="li"
+  class="nav-item"
+>
+  <div class="nav-item-hold">
+    <i class="i-Data-Download text-3xl"></i>
+    <p>Smart Restock Advisor</p>
+  </div>
+</router-link>
 
                         
                        

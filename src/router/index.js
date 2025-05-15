@@ -74,6 +74,15 @@ const routes = [
               
               ,
               {
+                path: '/inventory/smart-restock',
+                name: 'SmartRestockAdvisor',
+                component: () => import('@/views/Inventory Insights/SmartRestockAdvisor.vue'),
+                meta: {
+                  title: 'Smart Restock Advisor'
+                }
+              },
+              
+              {
                 path: '/dataanalytics',
                 name: 'DataAnalytics',
                 component: () => import('@/views/DataAnalytics/dataanalytics.vue')
