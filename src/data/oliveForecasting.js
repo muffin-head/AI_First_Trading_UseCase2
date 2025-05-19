@@ -7,8 +7,8 @@ export async function fetchOliveForecastData() {
 
     const result = await response.json();
 
-    // Return as-is for now. We'll structure it dynamically in the component.
-    return result.products;  // Object: { ProductName: [ { county, suppliers[] }, ... ] }
+    // Return everything (products, scorecard, etc.)
+    return result;
 
   } catch (error) {
     console.error('Olive Forecast fetch error:', error);

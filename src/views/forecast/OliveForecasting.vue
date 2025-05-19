@@ -5,28 +5,89 @@ import BaseCard from '@/components/Base/BaseCard.vue'
 import Breadcrumbs from '@/components/Breadcrumbs.vue'
 import ChartBlock from '@/components/ChartBlock.vue'
 
+const fullData = ref({})
 const data = ref({})
 const loading = ref(true)
 
 const selectedProduct = ref(null)
 const selectedCounty = ref(null)
-
+const selectedRegionGroup = ref(null)
 const currentAverages = ref({})
 
+const updateAverages = () => {
+  const group = data.value[selectedProduct.value]?.find(
+    entry => entry.county === selectedCounty.value
+  )
+
+  if (!group) {
+    selectedRegionGroup.value = null
+    currentAverages.value = {}
+    return
+  }
+
+  selectedRegionGroup.value = group
+
+  const quarters = ['2025Q1', '2025Q2', '2025Q3']
+  const aggregated = {}
+
+  quarters.forEach((q, i) => {
+    let count = 0, units = 0, forecast = 0, inventory = 0
+
+    group.suppliers.forEach(supplier => {
+      const idx = supplier.quarters.indexOf(q)
+      if (idx !== -1) {
+        count++
+        units += supplier.unitsSold[idx]
+        forecast += supplier.forecasted[idx]
+        inventory += supplier.inventory[idx]
+      }
+    })
+
+    if (count > 0) {
+      aggregated[q] = {
+        unitsSold: Math.round(units / count),
+        forecasted: Math.round(forecast / count),
+        inventory: Math.round(inventory / count)
+      }
+    } else {
+      const prev1 = quarters[i - 1] && aggregated[quarters[i - 1]]
+      const prev2 = quarters[i - 2] && aggregated[quarters[i - 2]]
+      const base = prev1?.forecasted || prev1?.unitsSold || 0
+      const growth = prev2 ? prev1.forecasted - prev2.forecasted : Math.round(base * 0.1)
+
+      aggregated[q] = {
+        unitsSold: null,
+        forecasted: Math.round(base + growth),
+        inventory: null
+      }
+    }
+  })
+
+  currentAverages.value = aggregated
+}
+
 onMounted(async () => {
-  data.value = await fetchOliveForecastData()
+  const result = await fetchOliveForecastData()
+  if (!result || !result.products) {
+    console.error("🚨 'products' key missing in API response")
+    return
+  }
+
+  fullData.value = result
+  data.value = result.products
+
   selectedProduct.value = Object.keys(data.value)[0]
   const firstRegions = data.value[selectedProduct.value]
   selectedCounty.value = firstRegions.length > 0 ? firstRegions[0].county : null
+
   updateAverages()
   loading.value = false
 })
 
-
 const activeChartData = computed(() => {
   const quarters = ['2025Q1', '2025Q2', '2025Q3']
   const valid = quarters.filter(q => currentAverages.value[q])
-  if (valid.length === 0) return null
+  if (!valid.length) return null
 
   return {
     series: [
@@ -40,11 +101,7 @@ const activeChartData = computed(() => {
       },
       {
         name: 'Forecast (Q3)',
-        data: valid.map((q, idx) => {
-          if (q === '2025Q2') return currentAverages.value[q].unitsSold
-          if (q === '2025Q3') return currentAverages.value[q].forecasted
-          return null
-        })
+        data: valid.map(q => q === '2025Q2' ? currentAverages.value[q].unitsSold : q === '2025Q3' ? currentAverages.value[q].forecasted : null)
       }
     ],
     chartOptions: {
@@ -75,8 +132,7 @@ const forecastAccuracy = computed(() => {
   if (!q1 || !q2) return '--'
   const err1 = Math.abs(q1.unitsSold - q1.forecasted) / q1.forecasted
   const err2 = Math.abs(q2.unitsSold - q2.forecasted) / q2.forecasted
-  const avgError = (err1 + err2) / 2
-  return `${(100 - avgError * 100).toFixed(1)}%`
+  return `${(100 - ((err1 + err2) / 2) * 100).toFixed(1)}%`
 })
 
 const revenueAtRisk = computed(() => {
@@ -93,124 +149,44 @@ const regionConfidence = computed(() => {
 
   const variance = values.reduce((acc, val) => {
     if (val && val.unitsSold !== null && val.forecasted !== null) {
-      const diff = Math.abs(val.unitsSold - val.forecasted)
-      acc.push(diff / val.forecasted)
+      acc.push(Math.abs(val.unitsSold - val.forecasted) / val.forecasted)
     }
     return acc
   }, [])
 
   const avgError = variance.length ? variance.reduce((a, b) => a + b, 0) / variance.length : 0
-  const confidence = 100 - avgError * 100
-  return `${confidence.toFixed(1)}%`
+  return `${(100 - avgError * 100).toFixed(1)}%`
 })
 
-
-
-const selectedRegionGroup = ref(null)  // Add this at the top of <script setup>
-
-// ⏬ Store raw supplier group during update
-const updateAverages = () => {
-  const group = data.value[selectedProduct.value]?.find(
-    entry => entry.county === selectedCounty.value
-  )
-
-  if (!group) {
-    selectedRegionGroup.value = null
-    currentAverages.value = {}
-    return
-  }
-
-  selectedRegionGroup.value = group
-
-  const quarters = ['2025Q1', '2025Q2', '2025Q3']
-  const aggregated = {}
-
-  quarters.forEach((q, i) => {
-    let count = 0
-    let units = 0
-    let forecast = 0
-    let inventory = 0
-
-    group.suppliers.forEach(supplier => {
-      const idx = supplier.quarters.indexOf(q)
-      if (idx !== -1) {
-        count++
-        units += supplier.unitsSold[idx]
-        forecast += supplier.forecasted[idx]
-        inventory += supplier.inventory[idx]
-      }
-    })
-
-    if (count > 0) {
-      aggregated[q] = {
-        unitsSold: Math.round(units / count),
-        forecasted: Math.round(forecast / count),
-        inventory: Math.round(inventory / count)
-      }
-    } else {
-      const prev1 = quarters[i - 1] && aggregated[quarters[i - 1]]
-      const prev2 = quarters[i - 2] && aggregated[quarters[i - 2]]
-      const base = prev1?.forecasted || prev1?.unitsSold || 0
-      const growth = prev2
-        ? prev1.forecasted - prev2.forecasted
-        : Math.round(base * 0.1)
-
-      aggregated[q] = {
-        unitsSold: null,
-        forecasted: Math.round(base + growth),
-        inventory: null
-      }
-    }
-  })
-
-  currentAverages.value = aggregated
-}
-
-
-// 📈 1. Forecast vs Actual by Supplier (latest quarter only)
 const forecastVsActualChart = computed(() => {
   if (!selectedRegionGroup.value) return null
 
   const suppliers = selectedRegionGroup.value.suppliers
-  const labels = suppliers.map(s => s.supplier)
-  const actuals = suppliers.map(s => s.unitsSold.at(-1))
-  const forecasts = suppliers.map(s => s.forecasted.at(-1))
-
   return {
     series: [
-      { name: 'Actual', data: actuals },
-      { name: 'Forecast', data: forecasts }
+      { name: 'Actual', data: suppliers.map(s => s.unitsSold.at(-1)) },
+      { name: 'Forecast', data: suppliers.map(s => s.forecasted.at(-1)) }
     ],
     chartOptions: {
       chart: { type: 'line' },
       xaxis: {
-  categories: labels,
-  tickPlacement: 'on',
-  tickAmount: labels.length,
-  labels: {
-    show: true,
-    rotate: -30,
-    trim: true,
-    style: {
-      fontSize: '11px',
-      fontWeight: 400,
-      colors: '#374151'  // slightly darker gray
-    },
-    hideOverlappingLabels: false,     // ✅ force show all
-    showDuplicates: true,
-    minHeight: 60,
-    maxHeight: 120
-  }
-}
-
-,
+        categories: suppliers.map(s => s.supplier),
+        labels: {
+          show: true,
+          rotate: -30,
+          style: { fontSize: '11px', fontWeight: 400, colors: '#374151' },
+          hideOverlappingLabels: false,
+          showDuplicates: true,
+          minHeight: 60,
+          maxHeight: 120
+        }
+      },
       stroke: { curve: 'smooth' },
       colors: ['#34d399', '#60a5fa']
     }
   }
 })
 
-// 🎯 2. Forecast Deviation by Quarter
 const forecastDeviationChart = computed(() => {
   if (!selectedRegionGroup.value) return null
 
@@ -220,14 +196,11 @@ const forecastDeviationChart = computed(() => {
     selectedRegionGroup.value.suppliers.forEach(supplier => {
       const idx = supplier.quarters.indexOf(q)
       if (idx !== -1) {
-        const actual = supplier.unitsSold[idx]
-        const forecast = supplier.forecasted[idx]
-        const dev = Math.abs(actual - forecast) / forecast
-        total += dev
+        total += Math.abs(supplier.unitsSold[idx] - supplier.forecasted[idx]) / supplier.forecasted[idx]
         count++
       }
     })
-    return count > 0 ? +(total / count * 100).toFixed(2) : null
+    return count ? +(total / count * 100).toFixed(2) : null
   })
 
   return {
@@ -241,7 +214,6 @@ const forecastDeviationChart = computed(() => {
   }
 })
 
-// 🔄 3. Rolling Forecast Accuracy Trend
 const forecastAccuracyTrendChart = computed(() => {
   if (!selectedRegionGroup.value) return null
 
@@ -251,13 +223,11 @@ const forecastAccuracyTrendChart = computed(() => {
     selectedRegionGroup.value.suppliers.forEach(supplier => {
       const idx = supplier.quarters.indexOf(q)
       if (idx !== -1) {
-        const actual = supplier.unitsSold[idx]
-        const forecast = supplier.forecasted[idx]
-        total += Math.abs(actual - forecast) / forecast
+        total += Math.abs(supplier.unitsSold[idx] - supplier.forecasted[idx]) / supplier.forecasted[idx]
         count++
       }
     })
-    return count > 0 ? +(100 - (total / count * 100)).toFixed(2) : null
+    return count ? +(100 - (total / count * 100)).toFixed(2) : null
   })
 
   return {
@@ -271,11 +241,10 @@ const forecastAccuracyTrendChart = computed(() => {
   }
 })
 
-// 🏷️ 4. Top 5 Suppliers by Forecast Accuracy
 const topSuppliersChart = computed(() => {
   if (!selectedRegionGroup.value) return null
 
-  const supplierAccuracy = selectedRegionGroup.value.suppliers.map(supplier => {
+  const suppliers = selectedRegionGroup.value.suppliers.map(supplier => {
     let total = 0, count = 0
     for (let i = 0; i < supplier.quarters.length; i++) {
       const forecast = supplier.forecasted[i]
@@ -285,14 +254,14 @@ const topSuppliersChart = computed(() => {
         count++
       }
     }
-    const avgError = count > 0 ? total / count : 1
+    const avgError = count ? total / count : 1
     return {
       name: supplier.supplier,
       accuracy: +(100 - avgError * 100).toFixed(2)
     }
   })
 
-  const top5 = supplierAccuracy.sort((a, b) => b.accuracy - a.accuracy).slice(0, 5)
+  const top5 = suppliers.sort((a, b) => b.accuracy - a.accuracy).slice(0, 5)
   return {
     series: [{ name: 'Accuracy (%)', data: top5.map(s => s.accuracy) }],
     chartOptions: {
@@ -302,9 +271,8 @@ const topSuppliersChart = computed(() => {
     }
   }
 })
-
-
 </script>
+
 
 <template>
   <div class="container mx-auto">
